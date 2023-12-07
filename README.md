@@ -28,7 +28,7 @@ You will get a response looking like this:
 }
 ```
 
-2. You can then call the following GET endpoint in order to retrieve the original URL https://localhost:8080/url/v1/retrieve/c5cd9fc1:
+2. You can then call the following GET endpoint in order to retrieve the original URL https://localhost:8080/url/v1/resolve/c5cd9fc1:
 
 ```json
 {
@@ -39,7 +39,7 @@ You will get a response looking like this:
 Please keep in mind that the DB will be recreated on each application start. This means that the short URLs won't be persisted on application restart
 
 ## Assumptions for the URL Shortener
-The URL Shortener uses the Murmur32 Hashing Algorithm. Since it hashes the original URL, it returns the same short URL for the same original URL every time. The output in this case is an 8 character long hexadecimal string. 
+The URL Shortener uses the MurmurHash3 32-bit Hashing Algorithm. Since it hashes the original URL, it returns the same short URL for the same original URL every time. The output in this case is an 8 character long hexadecimal string. 
 
 There are multiple ways to do URL shortening based on different requirements. In this case, there is no requirement for the number of short URLs that have to be stored and if the URLs should be different for different users. 
 Also, there is no requirement for the length of the short URL, the time for which it is valid, click tracking, etc. This application has a basic functionality for link expiration after 30 days. 
