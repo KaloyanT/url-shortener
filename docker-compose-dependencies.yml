@@ -1,14 +1,6 @@
 version: '3.8'
 
 services:
-  url-shortener:
-    image: url-shortener
-    build:
-      context: .
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/url
-    ports:
-      - '8080:8080'
   postgres:
     image: postgres:16
     ports:
