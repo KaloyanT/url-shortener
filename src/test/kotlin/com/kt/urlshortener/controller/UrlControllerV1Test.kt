@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.kt.urlshortener.controller.model.OriginalUrlResponse
 import com.kt.urlshortener.controller.model.UrlShorteningRequest
 import com.kt.urlshortener.controller.model.UrlShorteningResponse
+import com.kt.urlshortener.exception.UrlInvalidException
 import com.kt.urlshortener.exception.UrlNotFoundException
 import com.kt.urlshortener.service.UrlService
 import org.junit.jupiter.api.Test
@@ -45,7 +46,21 @@ class UrlControllerV1Test(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    fun urlIsShortenedForBlankUrl_Bad_Request() {
+    fun urlShorteningRequestForInvalidUrl_Bad_Request() {
+        val urlShorteningRequest = UrlShorteningRequest("longTestUrl")
+
+        whenever(urlService.shortenUrl(urlShorteningRequest)).thenThrow(UrlInvalidException("Invalid URL"))
+
+        mockMvc.perform(
+            post("/url/v1/shorten")
+                .content(jsonMapper().writeValueAsString(urlShorteningRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isBadRequest())
+    }
+
+    @Test
+    fun urlShorteningRequestForBlankUrl_Bad_Request() {
         val urlShorteningRequest = UrlShorteningRequest("")
 
         mockMvc.perform(

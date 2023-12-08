@@ -3,6 +3,7 @@ package com.kt.urlshortener.service
 import com.kt.urlshortener.controller.model.OriginalUrlResponse
 import com.kt.urlshortener.controller.model.UrlShorteningRequest
 import com.kt.urlshortener.db.UrlMapping
+import com.kt.urlshortener.exception.UrlInvalidException
 import com.kt.urlshortener.exception.UrlNotFoundException
 import com.kt.urlshortener.repository.UrlMappingRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -66,6 +67,15 @@ class UrlServiceTest {
         assertEquals(expectedShortUrl, urlShorteningResponse.shortenedUrl)
         Mockito.verify(urlMappingRepository, times(1)).findByShortUrl(expectedShortUrl)
         Mockito.verify(urlMappingRepository, times(0)).save(any())
+    }
+
+    @Test
+    fun shortenUrlForInvalidUrlIsNotSuccessful() {
+        val originalUrl = "invalidUrl"
+        val urlShorteningRequest = UrlShorteningRequest(originalUrl)
+
+        val exception = assertThrows<UrlInvalidException> { urlService.shortenUrl(urlShorteningRequest) }
+        assertEquals("Invalid URL", exception.message)
     }
 
     @Test
